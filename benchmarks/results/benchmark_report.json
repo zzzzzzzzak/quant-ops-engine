@@ -1,0 +1,92 @@
+{
+  "architecture": {
+    "n_layers": 4,
+    "d_model": 512,
+    "n_heads": 8,
+    "total_fp32_params": 12859904,
+    "input_shape": [
+      4,
+      64,
+      512
+    ]
+  },
+  "compression_benchmarks": [
+    {
+      "config": "FP32 Baseline",
+      "memory_mb": 49.06,
+      "compression_ratio": 1.0,
+      "output_sqnr_db": "inf",
+      "output_cosine_sim": 1.0,
+      "output_max_abs_err": 0.0,
+      "latency_p50_ms": 83.31,
+      "latency_p95_ms": 146.16
+    },
+    {
+      "config": "INT8 Per-Channel (MinMax)",
+      "memory_mb": 12.38,
+      "compression_ratio": 3.96,
+      "output_sqnr_db": 47.059,
+      "output_cosine_sim": 0.99999,
+      "output_max_abs_err": 0.011352,
+      "latency_p50_ms": 118.37,
+      "latency_p95_ms": 166.93
+    },
+    {
+      "config": "INT8 Per-Channel (MSE)",
+      "memory_mb": 12.38,
+      "compression_ratio": 3.96,
+      "output_sqnr_db": 47.065,
+      "output_cosine_sim": 0.99999,
+      "output_max_abs_err": 0.011015,
+      "latency_p50_ms": 100.33,
+      "latency_p95_ms": 119.72
+    },
+    {
+      "config": "INT4 Group-Wise (g=64, Bit-Packed)",
+      "memory_mb": 6.95,
+      "compression_ratio": 7.06,
+      "output_sqnr_db": 22.867,
+      "output_cosine_sim": 0.997434,
+      "output_max_abs_err": 0.192048,
+      "latency_p50_ms": 146.98,
+      "latency_p95_ms": 161.73
+    },
+    {
+      "config": "INT4 Group-Wise (g=128, Bit-Packed)",
+      "memory_mb": 6.56,
+      "compression_ratio": 7.47,
+      "output_sqnr_db": 22.651,
+      "output_cosine_sim": 0.997305,
+      "output_max_abs_err": 0.189415,
+      "latency_p50_ms": 121.43,
+      "latency_p95_ms": 166.31
+    }
+  ],
+  "numerical_stress_audit": {
+    "fp16_softmax_overflow": {
+      "naive_has_nan_or_inf": true,
+      "stable_has_nan_or_inf": false,
+      "stable_max_err_vs_fp32_ref": 0.0,
+      "status": "PASS"
+    },
+    "fp32_logsumexp_overflow": {
+      "naive_output": Infinity,
+      "stable_output": 1001.4076,
+      "stable_err_vs_torch_ref": 0.0,
+      "status": "PASS"
+    },
+    "layernorm_catastrophic_cancellation": {
+      "naive_has_nan": true,
+      "naive_max_err_vs_fp64_ref": "NaN",
+      "stable_max_err_vs_fp64_ref": 0.0,
+      "status": "PASS"
+    },
+    "outlier_quantization_sensitivity": {
+      "per_tensor_minmax_sqnr_db": 9.551,
+      "per_tensor_mse_sqnr_db": 9.746,
+      "per_channel_mse_sqnr_db": 27.944,
+      "per_channel_gain_db": 18.39,
+      "status": "PASS"
+    }
+  }
+}
